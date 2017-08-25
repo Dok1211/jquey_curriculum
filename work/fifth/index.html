@@ -102,7 +102,7 @@
       var value = $(this).val();
 
       $('li').each(function() {
-        if ($(this).data('category-type') === value) {
+        if (value === $(this).data('category-type') || value === 'all') {
           $(this).show();
         } else{
           $(this).hide();
