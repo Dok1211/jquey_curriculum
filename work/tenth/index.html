@@ -22,6 +22,7 @@
       <button id="js-search-button" class="search__btn">検索する</button>
     </div>
     <ul class="lists"></ul>
+    <div class="error"></div>
   </div>
 </div>
 <script src="../../common/js/jquery.js"></script>
@@ -51,18 +52,58 @@
 // http://qiita.com/marumaru8228/items/65fc684383b096f0e548
 //
 //
-  // $.ajax({
-  //   url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
-  //   type: 'GET',
-  //   datatype: 'json',
-  //   data: {
-  //     // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
-  //     applicationId: '1019399324990976605', // (今回はこのIDを使用してください)
-  //     booksGenreId: '001'
-  //   },
-  // }).done(function(data) {
-  //   // この中にデータ取得後の動きを記述していきます。
-  // });
+  $(function() {
+    var ajax =function(keyword){
+      return $.ajax({
+        url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+        type: 'GET',
+        datatype: 'json',
+        data: {
+        // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
+        applicationId: '1019399324990976605', // (今回はこのIDを使用してください)
+        booksGenreId: '001',
+        keyword: keyword,
+        hits: '20'
+        },
+      });
+    };
+    var ajaxDone = function(data) {
+      // // この中にデータ取得後の動きを記述していきます。
+        $('.lists').empty();
+        $('.error').empty();
+        if (data.count === 0) {
+          $('.error').append("<div class='message'>検索結果が見つかりませんでした。<br>別のキーワードで検索してください</div>");
+        } else{
+          data.Items.forEach(function(val, index) {
+            var $li =
+              "<li class='lists__item'>" +
+                "<div class='lists__item__inner'>" +
+                  "<a href='"+val.Item.itemUrl+"' class='lists__item__link' target='_blank'>" +
+                    "<img src='"+val.Item.largeImageUrl+"' class='lists__item__img' alt='"+val.Item.title+"'>" +
+                    "<p class='lists__item__detail'>作品名："+val.Item.title+"</p>" +
+                    "<p class='lists__item__detail'>作者　："+val.Item.author+"</p>" +
+                    "<p class='lists__item__detail'>出版社："+val.Item.publisherName+"</p>" +
+                  "</a>" +
+                "</div>" +
+              "</li>";
+            $('.lists').append($li);
+        })};
+    };
+    var ajaxFail = function(error) {
+        alert('データの取得に失敗しました\n' + error.statusText);
+        console.log(error);
+    };
+
+    $('.search__btn').on('click', function() {
+      var keyword = $('.search__text__input').val();
+
+      ajax(keyword).done(function(data) {
+        ajaxDone(data);
+      }).fail(function(error) {
+        ajaxFail(error);
+      });
+    });
+  });
 //
 </script>
 </body>
