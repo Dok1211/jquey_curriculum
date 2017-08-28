@@ -69,25 +69,26 @@
     };
     var ajaxDone = function(data) {
       // // この中にデータ取得後の動きを記述していきます。
-        $('.lists').empty();
-        $('.error').empty();
-        if (data.count === 0) {
-          $('.error').append("<div class='message'>検索結果が見つかりませんでした。<br>別のキーワードで検索してください</div>");
-        } else{
-          data.Items.forEach(function(val, index) {
-            var $li =
-              "<li class='lists__item'>" +
-                "<div class='lists__item__inner'>" +
-                  "<a href='"+val.Item.itemUrl+"' class='lists__item__link' target='_blank'>" +
-                    "<img src='"+val.Item.largeImageUrl+"' class='lists__item__img' alt='"+val.Item.title+"'>" +
-                    "<p class='lists__item__detail'>作品名："+val.Item.title+"</p>" +
-                    "<p class='lists__item__detail'>作者　："+val.Item.author+"</p>" +
-                    "<p class='lists__item__detail'>出版社："+val.Item.publisherName+"</p>" +
-                  "</a>" +
-                "</div>" +
-              "</li>";
-            $('.lists').append($li);
-        })};
+      $('.lists').empty();
+      $('.error').empty();
+      if (data.count === 0) {
+        $('.error').append("<div class='message'>検索結果が見つかりませんでした。<br>別のキーワードで検索してください</div>");
+      } else{
+        data.Items.forEach(function(val, index) {
+          var $li =
+            "<li class='lists__item'>" +
+              "<div class='lists__item__inner'>" +
+                "<a href='"+val.Item.itemUrl+"' class='lists__item__link' target='_blank'>" +
+                  "<img src='"+val.Item.largeImageUrl+"' class='lists__item__img' alt='"+val.Item.title+"'>" +
+                  "<p class='lists__item__detail'>作品名："+val.Item.title+"</p>" +
+                  "<p class='lists__item__detail'>作者　："+val.Item.author+"</p>" +
+                  "<p class='lists__item__detail'>出版社："+val.Item.publisherName+"</p>" +
+                "</a>" +
+              "</div>" +
+            "</li>";
+          $('.lists').append($li);
+        });
+      };
     };
     var ajaxFail = function(error) {
         alert('データの取得に失敗しました\n' + error.statusText);
